@@ -1,7 +1,7 @@
 #include "command.h"
 
 int Command::checkIndexOfFilter(int argc, char **argv) {
-	int index;
+	int index = -1;
 	for(int i = 1;i < argc;i++) {
 		string tmp(argv[i]);
 		if(tmp.find_first_of("-", 0) != 0) {
@@ -13,14 +13,9 @@ int Command::checkIndexOfFilter(int argc, char **argv) {
 }
 
 Command::Command(int argc, char **argv): tcpFlag(false), udpFlag(false), filter("") {
-	if(argc == 1) {
-		this->tcpFlag = true;
-		this->udpFlag = true;
-		this->filter = "";
-		return;
-	}
-	int ch;
-	int indexOfFilter = this->checkIndexOfFilter(argc,argv);
+	int optionCount = 0,
+		ch,
+		indexOfFilter = this->checkIndexOfFilter(argc,argv);
 	if(indexOfFilter > 0) {
 		this->filter = argv[indexOfFilter];
 	}
@@ -28,13 +23,19 @@ Command::Command(int argc, char **argv): tcpFlag(false), udpFlag(false), filter(
 		switch(ch) {
 			case 't':
 				this->tcpFlag = true;
+				optionCount++;
 				break;
 			case 'u':
 				this->udpFlag = true;
+				optionCount++;
 				break;
 			default:
 				break;
 		}
+	}
+	if(optionCount == 0) {
+		this->tcpFlag = true;
+		this->udpFlag = true;
 	}
 }
 
