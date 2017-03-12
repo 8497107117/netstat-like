@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <string>
 #include <getopt.h>
@@ -19,6 +21,8 @@ class Command {
 			string filter;
 			//	return index of filter, only return the first filter
 			int checkIndexOfFilter(int argc, char **argv);
+			void catTCP();
+			void catUDP();
 	public:
 			Command(int argc, char **argv);
 			void cat();

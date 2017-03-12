@@ -39,8 +39,46 @@ Command::Command(int argc, char **argv): tcpFlag(false), udpFlag(false), filter(
 	}
 }
 
+void Command::catTCP() {
+	cout << "List of TCP connections" << endl;
+	//	IPv4
+	FILE *fp = fopen("/proc/net/tcp", "r");
+	char buf[256];
+	while (fgets(buf, 256, fp) != NULL) {
+		cout << buf << endl;
+	}
+	fclose(fp);
+	//	IPv6
+	fp = fopen("/proc/net/tcp6", "r");
+	while (fgets(buf, 256, fp) != NULL) {
+		cout << buf << endl;
+	}
+	fclose(fp);
+}
+
+void Command::catUDP() {
+	cout << "List of UDP connections" << endl;
+	//	IPv4
+	FILE *fp = fopen("/proc/net/udp", "r");
+	char buf[256];
+	while (fgets(buf, 256, fp) != NULL) {
+		cout << buf << endl;
+	}
+	fclose(fp);
+	//	IPv6
+	fp = fopen("/proc/net/udp6", "r");
+	while (fgets(buf, 256, fp) != NULL) {
+		cout << buf << endl;
+	}
+	fclose(fp);
+}
+
 void Command::cat() {
-	cout << "tcp:" << this->tcpFlag << endl;
-	cout << "udp:" << this->udpFlag << endl;
+	if(this->tcpFlag) {
+		this->catTCP();
+	}
+	if(this->udpFlag) {
+		this->catUDP();
+	}
 	cout << "filter:" << this->filter << endl;
 }
