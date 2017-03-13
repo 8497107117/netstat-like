@@ -1,7 +1,7 @@
 CXX = g++
 CFLAGS = -g -Wall
 TARGET = hw1
-OBJECTS = main.o command.o
+OBJECTS = main.o command.o info.o
 
 all: $(TARGET)
 

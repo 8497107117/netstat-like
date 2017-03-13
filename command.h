@@ -1,9 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <iomanip>
 #include <string.h>
 #include <string>
 #include <getopt.h>
 #include <iostream>
+#include "info.h"
+
+#define BUFFSIZE 4096
 
 using namespace std;
 
@@ -20,7 +24,9 @@ class Command {
 			bool udpFlag;
 			string filter;
 			//	return index of filter, only return the first filter
-			int checkIndexOfFilter(int argc, char **argv);
+			int findIndexOfFilter(int argc, char **argv);
+			void catNav();
+			void catInfo(const char *protocol);
 			void catTCP();
 			void catUDP();
 	public:

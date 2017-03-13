@@ -1,6 +1,6 @@
 #include "command.h"
 
-int Command::checkIndexOfFilter(int argc, char **argv) {
+int Command::findIndexOfFilter(int argc, char **argv) {
 	int index = -1;
 	for(int i = 1;i < argc;i++) {
 		string tmp(argv[i]);
@@ -15,7 +15,7 @@ int Command::checkIndexOfFilter(int argc, char **argv) {
 Command::Command(int argc, char **argv): tcpFlag(false), udpFlag(false), filter("") {
 	int optionCount = 0,
 		ch,
-		indexOfFilter = this->checkIndexOfFilter(argc,argv);
+		indexOfFilter = this->findIndexOfFilter(argc,argv);
 	if(indexOfFilter > 0) {
 		this->filter = argv[indexOfFilter];
 	}
@@ -39,38 +39,45 @@ Command::Command(int argc, char **argv): tcpFlag(false), udpFlag(false), filter(
 	}
 }
 
-void Command::catTCP() {
-	cout << "List of TCP connections" << endl;
-	//	IPv4
-	FILE *fp = fopen("/proc/net/tcp", "r");
-	char buf[256];
-	while (fgets(buf, 256, fp) != NULL) {
-		cout << buf << endl;
-	}
-	fclose(fp);
-	//	IPv6
-	fp = fopen("/proc/net/tcp6", "r");
-	while (fgets(buf, 256, fp) != NULL) {
-		cout << buf << endl;
+void Command::catNav() {
+	cout << left << setw(10) << "Proto"
+		<< left << setw(25) << "Local Address"
+		<< left << setw(25) << "Foreign Address"
+		<< left << setw(25) << "PID/Program name and arguments"
+		<< endl;
+}
+
+void Command::catInfo(const char *protocol) {
+	char file[16] = "/proc/net/", p[16];
+	strcpy(p, protocol);
+	strcat(file, p);
+	FILE *fp = fopen(file, "r");
+	char buf[BUFFSIZE];
+	bool isNavRead = false;
+	while (fgets(buf, BUFFSIZE, fp) != NULL) {
+		if(!isNavRead) {
+			isNavRead = true;
+		}
+		else {
+			Info info(buf);
+			info.cat(protocol, this->filter);
+		}
 	}
 	fclose(fp);
 }
 
+void Command::catTCP() {
+	cout << "List of TCP connections:" << endl;
+	this->catNav();
+	this->catInfo("tcp");
+	this->catInfo("tcp6");
+}
+
 void Command::catUDP() {
-	cout << "List of UDP connections" << endl;
-	//	IPv4
-	FILE *fp = fopen("/proc/net/udp", "r");
-	char buf[256];
-	while (fgets(buf, 256, fp) != NULL) {
-		cout << buf << endl;
-	}
-	fclose(fp);
-	//	IPv6
-	fp = fopen("/proc/net/udp6", "r");
-	while (fgets(buf, 256, fp) != NULL) {
-		cout << buf << endl;
-	}
-	fclose(fp);
+	cout << "List of UDP connections:" << endl;
+	this->catNav();
+	this->catInfo("udp");
+	this->catInfo("udp6");
 }
 
 void Command::cat() {
@@ -80,5 +87,4 @@ void Command::cat() {
 	if(this->udpFlag) {
 		this->catUDP();
 	}
-	cout << "filter:" << this->filter << endl;
 }
