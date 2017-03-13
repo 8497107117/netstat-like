@@ -18,6 +18,7 @@ class Info {
 			string local;
 			string foreign;
 			string inode;
+			string name;
 			string handleInfo(const char *protocol, string info);
 			string handleinode();
 	public:

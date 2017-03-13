@@ -12,6 +12,7 @@ Info::Info(char *input) {
 	this->local = tokens[1];
 	this->foreign = tokens[2];
 	this->inode = tokens[9];
+	this->name = this->handleinode();
 }
 
 string Info::handleInfo(const char *protocol, string info) {
@@ -79,9 +80,17 @@ string Info::handleinode() {
 }
 
 void Info::cat(const char *protocol, string filter) {
+	string local = this->handleInfo(protocol, this->local),
+		foreign = this->handleInfo(protocol, this->foreign);
+	int localPos, foreignPos, namePos;
+	bool show = false;
+	if((localPos = local.find(filter)) != std::string::npos || filter == "") show = true;
+	if((foreignPos = foreign.find(filter)) != std::string::npos || filter == "") show = true;
+	if((namePos = this->name.find(filter)) != std::string::npos || filter == "") show = true;
+	if(!show) return;
 	cout << left << setw(10) << protocol
-		<< left << setw(25) << this->handleInfo(protocol, this->local)
-		<< left << setw(25) << this->handleInfo(protocol, this->foreign)
-		<< left << setw(25) << this->handleinode()
+		<< left << setw(25) << local
+		<< left << setw(25) << foreign
+		<< left << setw(25) << this->name
 		<< endl;
 }
