@@ -8,6 +8,7 @@
 #include <sys/types.h>
 #include <dirent.h>
 #include <unistd.h>
+#include <algorithm>
 
 #define BUFFSIZE 4096
 
@@ -19,6 +20,8 @@ class Info {
 			string foreign;
 			string inode;
 			string name;
+			string transformEndian(string input);
+			string transformIPv6(string input);
 			string handleInfo(const char *protocol, string info);
 			string handleinode();
 	public:

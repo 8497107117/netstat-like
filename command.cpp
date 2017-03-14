@@ -41,9 +41,9 @@ Command::Command(int argc, char **argv): tcpFlag(false), udpFlag(false), filter(
 
 void Command::catNav() {
 	cout << left << setw(10) << "Proto"
-		<< left << setw(25) << "Local Address"
-		<< left << setw(25) << "Foreign Address"
-		<< left << setw(25) << "PID/Program name and arguments"
+		<< left << setw(40) << "Local Address"
+		<< left << setw(40) << "Foreign Address"
+		<< left << setw(40) << "PID/Program name and arguments"
 		<< endl;
 }
 
